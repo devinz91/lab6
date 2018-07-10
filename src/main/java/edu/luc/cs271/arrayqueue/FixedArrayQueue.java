@@ -16,6 +16,7 @@ public class FixedArrayQueue<E> implements SimpleQueue<E> {
 
   private final E[] data;
 
+
   // TODO why do we need an explicit constructor?
 
   @SuppressWarnings("unchecked")
@@ -29,26 +30,42 @@ public class FixedArrayQueue<E> implements SimpleQueue<E> {
 
   @Override
   public boolean offer(final E obj) {
-    // TODO
+    if (size < capacity) {
+      size++;
+      rear = (rear + 1) % capacity;
+      data[rear] = obj;
+      return true;
+    }
     return false;
   }
 
   @Override
   public E peek() {
-    // TODO
-    return null;
+    if (size == 0) {
+      return null;
+    } else {
+      return data[front];
+    }
   }
 
   @Override
   public E poll() {
-    // TODO
-    return null;
+    if (size == 0) {
+      return null;
+    } else {
+      E result = data[front];
+      front = (front + 1) % capacity;
+      size--;
+      return result;
+    }
   }
 
   @Override
   public boolean isEmpty() {
-    // TODO
-    return true;
+    if (size == 0) {
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -58,7 +75,13 @@ public class FixedArrayQueue<E> implements SimpleQueue<E> {
 
   @Override
   public List<E> asList() {
-    // TODO implement using an ArrayList preallocated with the right size
-    return Arrays.asList();
+    List<E> newList = new ArrayList<>(size);
+    while (!isEmpty()) {
+      newList.add(data[front]);
+      front = (front + 1) % capacity;
+      size--;
+    }
+    return newList;
   }
+
 }
